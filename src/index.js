@@ -4,9 +4,6 @@ const { PrismaClient } = require('@prisma/client')
 const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
-        feed: async (parent, args, context, info) => {
-            return context.prisma.link.findMany()
-        },
     },
     Mutation: {
         post: (parent, args, context) => {
