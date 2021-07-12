@@ -1,4 +1,9 @@
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const { APP_SECRET, getUserId } = require('../utils')
+
 const { buildSchemaFromTypeDefinitions } = require("apollo-server")
+const { argsToArgsConfig } = require('graphql/type/definition')
 
 async function signup(parent, args, context, info) {
     const password = await bcrypt.hash(args.password, 10)
@@ -30,6 +35,18 @@ async function login(parent, args, context, info) {
         token,
         user,
     }
+}
+
+async function post(parent, args, context, info) {
+    const { userId } = context
+
+    return await context.prisma.link.create({
+        data: {
+            url: args.url,
+            description: args.description,
+            postedBy: { connect: { id: userId } },
+        }
+    })
 }
 
 module.exports = {
